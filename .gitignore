@@ -1,0 +1,32 @@
+# ── IDE / editors ─────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.iml
+.claude/
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Frontend (Node/Vite) ──────────────────────────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+
+# ── Backend (Maven) ───────────────────────────────────────────────────────────
+backend/target/
+
+# ── Contracts (Hardhat) ───────────────────────────────────────────────────────
+contracts/node_modules/
+contracts/artifacts/
+contracts/cache/
+contracts/deploy-output.json
+
+# ── IoT simulator (Mosquitto runtime data) ────────────────────────────────────
+iot-simulator/mosquitto/data/
+iot-simulator/mosquitto/log/
+
+# ── Project-local docs (kept locally, not on GitHub) ─────────────────────────
+diagramas/
+context.md
+docs/
+CLAUDE.md

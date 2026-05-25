@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: #ffffff;
+    color: #111111;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+  }
+}
+
+@layer utilities {
+  /* Bottom-border-only input — the signature element of this redesign */
+  .input-line {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #e5e5e5;
+    border-radius: 0;
+    padding: 12px 0;
+    font-size: 0.875rem;
+    color: #111111;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .input-line::placeholder {
+    color: #c4c4c4;
+    font-weight: 400;
+  }
+  .input-line:focus {
+    border-bottom-color: #111111;
+  }
+
+  /* Primary button — black */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: #111111;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 14px 32px;
+    border: 1px solid #111111;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .btn-primary:hover  { background: #2a2a2a; border-color: #2a2a2a; }
+  .btn-primary:active { background: #000000; }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* Secondary button — outlined */
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: transparent;
+    color: #111111;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 14px 32px;
+    border: 1px solid #111111;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .btn-secondary:hover { background: #111111; color: #ffffff; }
+}

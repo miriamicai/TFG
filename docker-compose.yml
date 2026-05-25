@@ -1,0 +1,19 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./iot-simulator/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./iot-simulator/mosquitto/data:/mosquitto/data
+      - ./iot-simulator/mosquitto/log:/mosquitto/log
+    restart: unless-stopped
+
+  iot-simulator:
+    build: ./iot-simulator
+    depends_on:
+      - mosquitto
+    environment:
+      MQTT_BROKER: mosquitto
+      MQTT_PORT: "1883"
+    restart: unless-stopped
