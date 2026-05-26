@@ -2,31 +2,32 @@
 pragma solidity ^0.8.24;
 
 /**
- * CadenaAceite — on-chain traceability for olive oil batches.
+ * CadenaAceite — trazabilidad on-chain para lotes de aceite de oliva.
  *
- * Each lot (identified by its backend database id) passes through up to three
- * stages.  Every stage both emits a Solidity event (indexed in the node logs)
- * and appends a record to an in-contract array so obtenerEventos() can return
- * the full history without relying on log queries.
+ * Cada lote (identificado por su id en la base de datos del backend) pasa por
+ * hasta tres etapas. Cada etapa emite un evento Solidity (indexado en los logs
+ * del nodo) y añade un registro al array interno del contrato para que
+ * obtenerEventos() pueda devolver el historial completo sin depender de
+ * consultas a los logs.
  *
- * The backend (Spring Boot) mirrors every transaction to H2 and stores the
- * returned txHash, so the frontend can show "verified on chain" links without
- * querying Ganache on every page load.
+ * El backend (Spring Boot) replica cada transacción en H2 y almacena el
+ * txHash devuelto, de forma que el frontend puede mostrar enlaces "verificado
+ * en blockchain" sin consultar Ganache en cada carga de página.
  */
 contract CadenaAceite {
 
     // -----------------------------------------------------------------------
-    // Data types
+    // Tipos de datos
     // -----------------------------------------------------------------------
 
     struct EventoOnChain {
         string   tipoEvento;   // "LOTE_CREADO" | "CAMION_CERRADO" | "PESAJE_REGISTRADO"
-        uint256  pesoKg;       // 0 for non-weighing events
-        uint256  timestamp;    // block.timestamp at the moment of the call
+        uint256  pesoKg;       // 0 en eventos que no son de pesaje
+        uint256  timestamp;    // block.timestamp en el momento de la llamada
     }
 
     // -----------------------------------------------------------------------
-    // Events  (indexed by loteId so they can be filtered cheaply)
+    // Eventos  (indexados por loteId para poder filtrarlos eficientemente)
     // -----------------------------------------------------------------------
 
     event LoteCreado(
@@ -47,13 +48,13 @@ contract CadenaAceite {
     );
 
     // -----------------------------------------------------------------------
-    // State
+    // Estado
     // -----------------------------------------------------------------------
 
     mapping(uint256 => EventoOnChain[]) private _eventos;
 
     // -----------------------------------------------------------------------
-    // Write functions  (called by CadenaAceiteWrapper via RawTransactionManager)
+    // Funciones de escritura  (llamadas desde CadenaAceiteWrapper)
     // -----------------------------------------------------------------------
 
     function crearLote(uint256 loteId, string calldata agricultorId) external {
@@ -72,8 +73,8 @@ contract CadenaAceite {
     }
 
     // -----------------------------------------------------------------------
-    // Read function  (not used by Spring Boot — it reads from H2 — but useful
-    // for direct on-chain verification and the TFG demonstration)
+    // Función de lectura  (no usada por Spring Boot —lee de H2— pero útil
+    // para verificación directa on-chain y la demostración del TFG)
     // -----------------------------------------------------------------------
 
     function obtenerEventos(uint256 loteId)

@@ -1,8 +1,7 @@
-# ── IDE / editors ─────────────────────────────────────────────────────────────
+# ── IDE / editores ─────────────────────────────────────────────────────────────
 .idea/
 .vscode/
 *.iml
-.claude/
 
 # ── OS ────────────────────────────────────────────────────────────────────────
 .DS_Store
@@ -15,18 +14,15 @@ frontend/dist/
 # ── Backend (Maven) ───────────────────────────────────────────────────────────
 backend/target/
 
-# ── Contracts (Hardhat) ───────────────────────────────────────────────────────
+# ── Contractos (Hardhat) ───────────────────────────────────────────────────────
 contracts/node_modules/
 contracts/artifacts/
 contracts/cache/
 contracts/deploy-output.json
 
-# ── IoT simulator (Mosquitto runtime data) ────────────────────────────────────
+# ── Simulador IoT ────────────────────────────────────
 iot-simulator/mosquitto/data/
 iot-simulator/mosquitto/log/
 
-# ── Project-local docs (kept locally, not on GitHub) ─────────────────────────
-diagramas/
+# ── Docs locals ─────────────────────────
 context.md
-docs/
-CLAUDE.md
