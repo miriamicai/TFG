@@ -277,7 +277,7 @@ contract CadenaAceite is Ownable {
 
     // -----------------------------------------------------------------------
     // Función de lectura (no usada por Spring Boot —lee de H2— pero útil
-    // para verificación directa on-chain y la demostración del TFG)
+    // para verificación directa on-chain y la demostración)
     // -----------------------------------------------------------------------
 
     function obtenerEventos(uint256 loteId)
