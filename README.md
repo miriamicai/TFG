@@ -93,12 +93,4 @@ Base URL: `http://localhost:8080/api`
 | POST | `/lotes/{id}/decanter` | Parámetros del decanter centrífugo |
 | POST | `/lotes/{id}/extraccion-finalizada` | Cierre del proceso de extracción |
 
-## Documentación
 
-Ver el directorio `docs/` para documentación técnica completa:
-
-- `docs/CONTEXT.md` — setup y referencia rápida
-- `docs/DOCUMENTACION_TECNICA.md` — decisiones de diseño
-- `docs/JUSTIFICACION_TECNICA.md` — ~14.000 palabras para la memoria del TFG (20 secciones)
-- `docs/CONFIGURACION.md` — todos los ficheros de configuración explicados
-- `docs/MEJORAS_CODIGO.md` — revisión técnica con antes/después (13 mejoras)
