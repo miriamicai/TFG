@@ -2,15 +2,30 @@ import { useState } from 'react';
 import { ArrowRight, CheckCircle2, CircleDashed, Copy, Check } from 'lucide-react';
 import { getTrazabilidad, type TrazabilidadResponse, type EventoResponse } from '../lib/api';
 
-// ── Configuración de eventos ──────────────────────────────────────────────────
+// ── Tipos de evento ───────────────────────────────────────────────────────────
 
-type TipoEvento = EventoResponse['tipoEvento'];
+type TipoEvento =
+  | 'LOTE_CREADO'
+  | 'CAMION_CERRADO'
+  | 'APERTURA_COMPUERTA'
+  | 'PESAJE_CAMION_LLENO'
+  | 'VOLCADO_TOLVA'
+  | 'PESAJE_CAMION_VACIO'
+  | 'PESAJE_CINTA'
+  | 'LAVADO'
+  | 'MOLIENDA_INICIADA'
+  | 'TEMPERATURA_BATIDO'
+  | 'DECANTER'
+  | 'CENTRIFUGADORA'
+  | 'EXTRACCION_FINALIZADA';
+
+// ── Configuración de eventos ──────────────────────────────────────────────────
 
 const EVENT_CONFIG: Record<TipoEvento, {
   emoji: string;
   label: string;
   sublabel: string;
-  accent: string;   // clase de color para el borde izquierdo
+  accent: string;
 }> = {
   LOTE_CREADO: {
     emoji: '🫒',
@@ -24,13 +39,85 @@ const EVENT_CONFIG: Record<TipoEvento, {
     sublabel: 'Cierre de transporte',
     accent: 'border-l-amber-500',
   },
-  PESAJE_REGISTRADO: {
+  APERTURA_COMPUERTA: {
+    emoji: '🚨',
+    label: 'Apertura de Compuerta',
+    sublabel: 'Incidencia en transporte',
+    accent: 'border-l-red-500',
+  },
+  PESAJE_CAMION_LLENO: {
     emoji: '⚖️',
-    label: 'Pesaje Registrado',
-    sublabel: 'Control de peso',
-    accent: 'border-l-slate-400',
+    label: 'Pesaje Camión Lleno',
+    sublabel: 'Recepción en báscula almazara',
+    accent: 'border-l-blue-600',
+  },
+  VOLCADO_TOLVA: {
+    emoji: '🚛',
+    label: 'Volcado en Tolva',
+    sublabel: 'Descarga de aceituna',
+    accent: 'border-l-amber-600',
+  },
+  PESAJE_CAMION_VACIO: {
+    emoji: '⚖️',
+    label: 'Pesaje Camión Vacío',
+    sublabel: 'Tara del vehículo',
+    accent: 'border-l-blue-400',
+  },
+  PESAJE_CINTA: {
+    emoji: '⚖️',
+    label: 'Pesaje en Cinta',
+    sublabel: 'Recepción en almazara',
+    accent: 'border-l-olive-500',
+  },
+  LAVADO: {
+    emoji: '💧',
+    label: 'Lavado',
+    sublabel: 'Limpieza de aceitunas',
+    accent: 'border-l-blue-400',
+  },
+  MOLIENDA_INICIADA: {
+    emoji: '⚙️',
+    label: 'Molienda Iniciada',
+    sublabel: 'Trituración de aceitunas',
+    accent: 'border-l-stone-500',
+  },
+  TEMPERATURA_BATIDO: {
+    emoji: '🌡️',
+    label: 'Temperatura de Batido',
+    sublabel: 'Control de temperatura',
+    accent: 'border-l-orange-400',
+  },
+  DECANTER: {
+    emoji: '🔬',
+    label: 'Decanter',
+    sublabel: 'Separación centrífuga',
+    accent: 'border-l-cyan-500',
+  },
+  CENTRIFUGADORA: {
+    emoji: '🔄',
+    label: 'Centrifugadora',
+    sublabel: 'Separación vertical',
+    accent: 'border-l-purple-600',
+  },
+  EXTRACCION_FINALIZADA: {
+    emoji: '🫙',
+    label: 'Extracción Finalizada',
+    sublabel: 'Proceso completado',
+    accent: 'border-l-green-500',
   },
 };
+
+function getEventCfg(tipo: string) {
+  if (tipo in EVENT_CONFIG) {
+    return EVENT_CONFIG[tipo as TipoEvento];
+  }
+  return {
+    emoji: '📋',
+    label: tipo,
+    sublabel: 'Evento registrado',
+    accent: 'border-l-gray-400',
+  };
+}
 
 // ── Utilidades ────────────────────────────────────────────────────────────────
 
@@ -60,6 +147,109 @@ function CopyButton({ text }: { text: string }) {
   );
 }
 
+// ── Metadatos específicos del evento ─────────────────────────────────────────
+
+interface MetaRow { label: string; value: string; }
+
+function parseMetaDatos(tipo: string, raw: string | null | undefined): MetaRow[] {
+  if (!raw) return [];
+  let parsed: Record<string, unknown>;
+  try {
+    parsed = JSON.parse(raw) as Record<string, unknown>;
+  } catch {
+    return [];
+  }
+
+  const rows: MetaRow[] = [];
+
+  switch (tipo) {
+    case 'LOTE_CREADO':
+      if ('contenedorId' in parsed && parsed.contenedorId)
+        rows.push({ label: 'Contenedor', value: String(parsed.contenedorId) });
+      if ('matriculaCamion' in parsed && parsed.matriculaCamion)
+        rows.push({ label: 'Matrícula', value: String(parsed.matriculaCamion) });
+      if ('coordenadasContenedor' in parsed && parsed.coordenadasContenedor)
+        rows.push({ label: 'Coordenadas', value: String(parsed.coordenadasContenedor) });
+      break;
+
+    case 'APERTURA_COMPUERTA':
+      if ('esAutorizada' in parsed)
+        rows.push({ label: 'Autorizada', value: parsed.esAutorizada === true ? 'Sí' : 'No' });
+      if ('ubicacion' in parsed && typeof parsed.ubicacion === 'string')
+        rows.push({ label: 'Ubicación', value: parsed.ubicacion });
+      break;
+
+    case 'LAVADO':
+      if ('aguaApta' in parsed)
+        rows.push({ label: 'Agua', value: parsed.aguaApta === true ? 'Apta' : 'No apta' });
+      if ('temperaturaAgua' in parsed && typeof parsed.temperaturaAgua === 'number')
+        rows.push({ label: 'Temp. agua', value: `${(parsed.temperaturaAgua / 10).toFixed(1)} °C` });
+      if ('phAgua' in parsed && typeof parsed.phAgua === 'number')
+        rows.push({ label: 'pH', value: (parsed.phAgua / 10).toFixed(1) });
+      break;
+
+    case 'MOLIENDA_INICIADA':
+      if ('temperaturaC' in parsed && typeof parsed.temperaturaC === 'number')
+        rows.push({ label: 'Temp. molino', value: `${(parsed.temperaturaC / 10).toFixed(1)} °C` });
+      break;
+
+    case 'TEMPERATURA_BATIDO':
+      if ('temperaturaC' in parsed && typeof parsed.temperaturaC === 'number')
+        rows.push({ label: 'Temperatura', value: `${(parsed.temperaturaC / 10).toFixed(1)} °C` });
+      break;
+
+    case 'DECANTER':
+      if ('litrosAceite' in parsed && typeof parsed.litrosAceite === 'number')
+        rows.push({ label: 'Litros aceite', value: `${parsed.litrosAceite.toLocaleString('es-ES')} L` });
+      if ('kgAlpeorujo' in parsed && typeof parsed.kgAlpeorujo === 'number')
+        rows.push({ label: 'Alpeorujo', value: `${parsed.kgAlpeorujo.toLocaleString('es-ES')} kg` });
+      break;
+
+    case 'CENTRIFUGADORA':
+      if ('revoluciones' in parsed && typeof parsed.revoluciones === 'number')
+        rows.push({ label: 'RPM', value: `${parsed.revoluciones.toLocaleString('es-ES')}` });
+      if ('temperatura' in parsed && typeof parsed.temperatura === 'number')
+        rows.push({ label: 'Temperatura', value: `${(parsed.temperatura / 10).toFixed(1)} °C` });
+      break;
+
+    case 'EXTRACCION_FINALIZADA':
+      if ('litrosAceiteTotal' in parsed && typeof parsed.litrosAceiteTotal === 'number')
+        rows.push({ label: 'Total aceite', value: `${parsed.litrosAceiteTotal.toLocaleString('es-ES')} L` });
+      if ('rendimientoPorcentaje' in parsed && typeof parsed.rendimientoPorcentaje === 'number')
+        rows.push({ label: 'Rendimiento', value: `${(parsed.rendimientoPorcentaje / 10).toFixed(1)} %` });
+      break;
+
+    default:
+      Object.entries(parsed).forEach(([k, v]) => {
+        if (v !== null && v !== undefined)
+          rows.push({ label: k, value: String(v) });
+      });
+  }
+
+  return rows;
+}
+
+function MetaDatos({ tipo, raw }: { tipo: string; raw: string | null | undefined }) {
+  const rows = parseMetaDatos(tipo, raw);
+  if (rows.length === 0) return null;
+
+  return (
+    <div className="mt-3 bg-[#fafafa] border border-[#e5e5e5] px-4 py-3">
+      <p className="text-[9px] uppercase tracking-widest text-[#aaaaaa] font-bold mb-2.5">
+        Metadatos
+      </p>
+      <div className="grid grid-cols-2 gap-x-6 gap-y-2">
+        {rows.map(({ label, value }) => (
+          <div key={label}>
+            <p className="text-[9px] uppercase tracking-wide text-[#aaaaaa]">{label}</p>
+            <p className="text-xs text-[#444444] font-medium mt-0.5">{value}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ── Tarjeta de evento ─────────────────────────────────────────────────────────
 
 function EventoCard({ evento, index, isLast }: {
@@ -67,7 +257,8 @@ function EventoCard({ evento, index, isLast }: {
   index: number;
   isLast: boolean;
 }) {
-  const cfg = EVENT_CONFIG[evento.tipoEvento];
+  const cfg = getEventCfg(evento.tipoEvento);
+  const hasBadges = Boolean(evento.cooperativaId || evento.almazaraId);
 
   return (
     <div
@@ -87,8 +278,9 @@ function EventoCard({ evento, index, isLast }: {
       {/* Tarjeta */}
       <div className={`flex-1 mb-8 bg-white border border-[#e5e5e5] border-l-4 ${cfg.accent} hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition-shadow duration-200`}>
         <div className="p-6">
+
           {/* Cabecera */}
-          <div className="flex items-start justify-between gap-4 mb-5">
+          <div className={`flex items-start justify-between gap-4 ${hasBadges ? 'mb-3' : 'mb-5'}`}>
             <div>
               <p className="text-[10px] uppercase tracking-widest text-[#aaaaaa] font-semibold mb-1.5">
                 {cfg.sublabel}
@@ -101,6 +293,22 @@ function EventoCard({ evento, index, isLast }: {
               {formatTs(evento.timestamp)}
             </p>
           </div>
+
+          {/* Badges de cooperativa / almazara */}
+          {hasBadges && (
+            <div className="flex flex-wrap gap-2 mb-5">
+              {evento.cooperativaId && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide bg-olive-50 text-olive-700 border border-olive-200 rounded-sm">
+                  🌿 {evento.cooperativaId}
+                </span>
+              )}
+              {evento.almazaraId && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide bg-amber-50 text-amber-700 border border-amber-200 rounded-sm">
+                  🏭 {evento.almazaraId}
+                </span>
+              )}
+            </div>
+          )}
 
           {/* Peso */}
           {evento.pesoKg !== null && (
@@ -130,6 +338,10 @@ function EventoCard({ evento, index, isLast }: {
               <span className="text-xs text-[#aaaaaa]">Sin verificación blockchain</span>
             </div>
           )}
+
+          {/* Metadatos específicos del tipo de evento */}
+          <MetaDatos tipo={evento.tipoEvento} raw={evento.metadatos} />
+
         </div>
       </div>
     </div>

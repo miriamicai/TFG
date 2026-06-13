@@ -1,28 +1,47 @@
-# ── IDE / editores ─────────────────────────────────────────────────────────────
+# ── Entornos de desarrollo ───────────────────────────────────────────────────
 .idea/
 .vscode/
 *.iml
 
-# ── OS ────────────────────────────────────────────────────────────────────────
+# ── Sistema operativo ────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 
-# ── Frontend (Node/Vite) ──────────────────────────────────────────────────────
+# ── Variables de entorno (claves y secretos) ─────────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ── Frontend (Node / Vite) ───────────────────────────────────────────────────
 frontend/node_modules/
 frontend/dist/
 
-# ── Backend (Maven) ───────────────────────────────────────────────────────────
+# ── Backend (Maven) ──────────────────────────────────────────────────────────
 backend/target/
 
-# ── Contractos (Hardhat) ───────────────────────────────────────────────────────
+# ── Contratos (Hardhat) ──────────────────────────────────────────────────────
 contracts/node_modules/
 contracts/artifacts/
 contracts/cache/
 contracts/deploy-output.json
 
-# ── Simulador IoT ────────────────────────────────────
+# ── Simulador IoT (datos en tiempo de ejecución de Mosquitto) ────────────────
 iot-simulator/mosquitto/data/
 iot-simulator/mosquitto/log/
+iot-simulator/__pycache__/
 
-# ── Docs locals ─────────────────────────
-context.md
+# ── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+
+# ── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+
+# ── Hardhat / Ganache local ───────────────────────────────────────────────────
+contracts/.env
+contracts/hardhat.config.js.local
+
+# ── Spring Boot override local ────────────────────────────────────────────────
+backend/src/main/resources/application-local.properties
+backend/src/main/resources/application-local.yml

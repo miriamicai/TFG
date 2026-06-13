@@ -3,26 +3,35 @@ import { useNavigate } from 'react-router-dom';
 import { AlertCircle } from 'lucide-react';
 import { crearLote } from '../lib/api';
 import CierreCompuertaPage from './CierreCompuertaPage';
-import PesajePage from './PesajePage';
 
-type Step = 1 | 2 | 3;
+type Step = 1 | 2;
+
+const COORD_DEFECTO = '37.7749,-4.7796';
 
 // ── Paso 1: Crear Lote ────────────────────────────────────────────────────────
 
 function CrearLoteStep({ onSuccess }: { onSuccess: (loteId: string) => void }) {
-  const [agricultorId, setAgricultorId] = useState('');
-  const [origen, setOrigen]             = useState('');
-  const [loading, setLoading]           = useState(false);
-  const [error, setError]               = useState<string | null>(null);
+  const [agricultorId, setAgricultorId]       = useState('AGR-001');
+  const [origen, setOrigen]                   = useState('Cortijo El Molino, Jaén');
+  const [contenedorId, setContenedorId]       = useState('CONT-2026-001');
+  const [matriculaCamion, setMatriculaCamion] = useState('1234 BCD');
+  const [loading, setLoading]                 = useState(false);
+  const [error, setError]                     = useState<string | null>(null);
   const navigate = useNavigate();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!agricultorId.trim() || !origen.trim()) return;
+    if (!agricultorId.trim() || !origen.trim() || !contenedorId.trim() || !matriculaCamion.trim()) return;
     setLoading(true);
     setError(null);
     try {
-      const lote = await crearLote(agricultorId.trim(), origen.trim());
+      const lote = await crearLote(
+        agricultorId.trim(),
+        origen.trim(),
+        contenedorId.trim(),
+        matriculaCamion.trim(),
+        COORD_DEFECTO,
+      );
       onSuccess(lote.loteId);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
@@ -48,8 +57,6 @@ function CrearLoteStep({ onSuccess }: { onSuccess: (loteId: string) => void }) {
           <div className="w-6 h-6 rounded-full bg-white text-olive-900 text-[11px] font-bold flex items-center justify-center">1</div>
           <div className="w-14 h-px bg-white/15" />
           <div className="w-6 h-6 rounded-full border border-white/20 text-white/25 text-[11px] font-bold flex items-center justify-center">2</div>
-          <div className="w-14 h-px bg-white/15" />
-          <div className="w-6 h-6 rounded-full border border-white/20 text-white/25 text-[11px] font-bold flex items-center justify-center">3</div>
         </div>
 
         <div className="w-20" />
@@ -60,7 +67,7 @@ function CrearLoteStep({ onSuccess }: { onSuccess: (loteId: string) => void }) {
         <div className="w-full max-w-md animate-fade-in-up">
 
           <p className="text-xs uppercase tracking-[0.35em] text-olive-500 mb-3">
-            Paso 1 de 3
+            Paso 1 de 2
           </p>
           <h2 className="font-serif text-5xl font-bold text-white mb-2">
             Crear Lote
@@ -86,7 +93,7 @@ function CrearLoteStep({ onSuccess }: { onSuccess: (loteId: string) => void }) {
             </div>
 
             {/* Origen */}
-            <div className="mb-14">
+            <div className="mb-10">
               <label className="block text-xs font-bold uppercase tracking-[0.22em] text-olive-500 mb-3">
                 Origen / Finca
               </label>
@@ -95,6 +102,34 @@ function CrearLoteStep({ onSuccess }: { onSuccess: (loteId: string) => void }) {
                 value={origen}
                 onChange={e => setOrigen(e.target.value)}
                 placeholder="Cortijo El Molino, Jaén"
+                className="w-full bg-transparent border-0 border-b border-white/15 focus:border-white/50 outline-none text-white placeholder:text-white/18 py-3 text-base transition-colors duration-150"
+              />
+            </div>
+
+            {/* ID Contenedor */}
+            <div className="mb-10">
+              <label className="block text-xs font-bold uppercase tracking-[0.22em] text-olive-500 mb-3">
+                ID Contenedor
+              </label>
+              <input
+                type="text"
+                value={contenedorId}
+                onChange={e => setContenedorId(e.target.value)}
+                placeholder="CONT-2026-001"
+                className="w-full bg-transparent border-0 border-b border-white/15 focus:border-white/50 outline-none text-white placeholder:text-white/18 py-3 text-base transition-colors duration-150"
+              />
+            </div>
+
+            {/* Matrícula del camión */}
+            <div className="mb-14">
+              <label className="block text-xs font-bold uppercase tracking-[0.22em] text-olive-500 mb-3">
+                Matrícula del Camión
+              </label>
+              <input
+                type="text"
+                value={matriculaCamion}
+                onChange={e => setMatriculaCamion(e.target.value)}
+                placeholder="1234 ABC"
                 className="w-full bg-transparent border-0 border-b border-white/15 focus:border-white/50 outline-none text-white placeholder:text-white/18 py-3 text-base transition-colors duration-150"
               />
             </div>
@@ -110,7 +145,7 @@ function CrearLoteStep({ onSuccess }: { onSuccess: (loteId: string) => void }) {
             {/* Enviar */}
             <button
               type="submit"
-              disabled={loading || !agricultorId.trim() || !origen.trim()}
+              disabled={loading || !agricultorId.trim() || !origen.trim() || !contenedorId.trim() || !matriculaCamion.trim()}
               className="w-full py-4 bg-white text-olive-900 font-bold text-sm uppercase tracking-[0.2em] hover:bg-olive-50 active:bg-olive-100 transition-colors disabled:opacity-35 disabled:cursor-not-allowed"
             >
               {loading ? (
@@ -136,7 +171,8 @@ function CrearLoteStep({ onSuccess }: { onSuccess: (loteId: string) => void }) {
 // ── RegistroFlow ──────────────────────────────────────────────────────────────
 
 export default function RegistroFlow() {
-  const [step, setStep]   = useState<Step>(1);
+  const navigate = useNavigate();
+  const [step, setStep]     = useState<Step>(1);
   const [loteId, setLoteId] = useState('');
 
   function handleLoteCreado(id: string) {
@@ -145,14 +181,13 @@ export default function RegistroFlow() {
   }
 
   function handleCompuertaCerrada() {
-    setStep(3);
+    navigate('/campo/transporte', { state: { loteId } });
   }
 
   return (
     <>
       {step === 1 && <CrearLoteStep onSuccess={handleLoteCreado} />}
       {step === 2 && <CierreCompuertaPage loteId={loteId} onContinue={handleCompuertaCerrada} />}
-      {step === 3 && <PesajePage loteId={loteId} />}
     </>
   );
 }

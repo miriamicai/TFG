@@ -22,47 +22,45 @@ function TruckSVG({ doorClosed }: { doorClosed: boolean }) {
 
       {/* ── Caja de carga ── */}
       {/* Cuerpo principal */}
-      <rect x="36" y="28" width="165" height="77" rx="3" fill="#1a2d12" />
-      {/* Franja superior de luz */}
-      <rect x="36" y="28" width="165" height="5" rx="2" fill="#263d18" />
+      <rect x="36" y="34" width="165" height="71" rx="3" fill="#1a2d12" />
       {/* Nervios horizontales */}
-      <line x1="37" y1="53" x2="200" y2="53" stroke="#263d18" strokeWidth="1.5" opacity="0.5" />
-      <line x1="37" y1="78" x2="200" y2="78" stroke="#263d18" strokeWidth="1.5" opacity="0.5" />
+      <line x1="37" y1="57" x2="200" y2="57" stroke="#263d18" strokeWidth="1.5" opacity="0.5" />
+      <line x1="37" y1="80" x2="200" y2="80" stroke="#263d18" strokeWidth="1.5" opacity="0.5" />
       {/* Cara frontal de la caja (unión con la cabina) */}
-      <rect x="198" y="28" width="4" height="77" fill="#263d18" />
+      <rect x="198" y="34" width="4" height="71" fill="#263d18" />
 
-      {/* ── Zona de la puerta (parte trasera, lado izquierdo) ── */}
-      {/* Abertura de la puerta — hueco oscuro que indica camión abierto */}
-      <rect x="20" y="28" width="17" height="77" rx="1" fill="#080e05" />
-      {/* Marco de la puerta */}
-      <rect x="18" y="26" width="21" height="81" rx="2" fill="none" stroke="#3a5b13" strokeWidth="2" />
+      {/* ── Apertura superior ── */}
+      {/* Marco/borde superior de la caja */}
+      <rect x="34" y="26" width="169" height="10" rx="2" fill="#263d18" />
+      {/* Interior oscuro visible cuando la compuerta está abierta */}
+      <rect x="36" y="27" width="165" height="8" fill="#080e05" />
 
-      {/* Panel de la puerta — baja desde arriba al cerrar */}
+      {/* ── Compuerta superior — desliza desde el lado de la cabina (derecha) hacia atrás ── */}
       <rect
-        x="20"
-        y="28"
-        width="15"
-        height="77"
-        rx="1"
+        x="36"
+        y="23"
+        width="165"
+        height="14"
+        rx="2"
         fill="#4a7319"
         style={{
           transformBox: 'fill-box',
-          transformOrigin: 'center top',
-          transition: 'transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)',
-          transform: doorClosed ? 'scaleY(1)' : 'scaleY(0.04)',
+          transformOrigin: 'right center',
+          transition: 'transform 1.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+          transform: doorClosed ? 'scaleX(1)' : 'scaleX(0.04)',
         }}
       />
-      {/* Pestillo de la puerta (visible al cerrar) */}
-      {doorClosed && (
-        <circle cx="27" cy="92" r="3.5" fill="#618929" />
-      )}
-      {/* Lamas horizontales de la puerta (decorativas) */}
+      {/* Nervios decorativos de la compuerta (visibles al cerrar) */}
       {doorClosed && (
         <>
-          <line x1="20" y1="48" x2="35" y2="48" stroke="#3a5b13" strokeWidth="1" opacity="0.7" />
-          <line x1="20" y1="68" x2="35" y2="68" stroke="#3a5b13" strokeWidth="1" opacity="0.7" />
-          <line x1="20" y1="88" x2="35" y2="88" stroke="#3a5b13" strokeWidth="1" opacity="0.7" />
+          <line x1="80"  y1="24" x2="80"  y2="36" stroke="#3a5b13" strokeWidth="1.2" opacity="0.6" />
+          <line x1="120" y1="24" x2="120" y2="36" stroke="#3a5b13" strokeWidth="1.2" opacity="0.6" />
+          <line x1="160" y1="24" x2="160" y2="36" stroke="#3a5b13" strokeWidth="1.2" opacity="0.6" />
         </>
+      )}
+      {/* Pestillo trasero de la compuerta (visible al cerrar) */}
+      {doorClosed && (
+        <circle cx="43" cy="30" r="3.5" fill="#618929" />
       )}
 
       {/* ── Cabina ── */}
@@ -193,11 +191,6 @@ export default function CierreCompuertaPage({ loteId, onContinue }: Props) {
           <div className="w-6 h-6 rounded-full bg-white text-olive-900 text-[11px] font-bold flex items-center justify-center">
             2
           </div>
-          <div className="w-14 h-px bg-white/15" />
-          {/* Paso 3 pendiente */}
-          <div className="w-6 h-6 rounded-full border border-white/20 text-white/25 text-[11px] font-bold flex items-center justify-center">
-            3
-          </div>
         </div>
 
         <div className="w-32" />
@@ -208,7 +201,7 @@ export default function CierreCompuertaPage({ loteId, onContinue }: Props) {
         <div className="w-full max-w-lg animate-fade-in-up text-center">
 
           <p className="text-xs uppercase tracking-[0.35em] text-olive-500 mb-3">
-            Paso 2 de 3
+            Paso 2 de 2
           </p>
           <h2 className="font-serif text-5xl font-bold text-white mb-14">
             Cierre de Compuerta
@@ -252,7 +245,7 @@ export default function CierreCompuertaPage({ loteId, onContinue }: Props) {
               onClick={onContinue}
               className="animate-scale-in w-full max-w-xs mx-auto py-4 bg-white text-olive-900 font-bold text-sm uppercase tracking-[0.2em] hover:bg-olive-50 active:bg-olive-100 transition-colors"
             >
-              Continuar al pesaje →
+              Continuar al transporte →
             </button>
           )}
         </div>

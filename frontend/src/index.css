@@ -19,7 +19,7 @@
 }
 
 @layer utilities {
-  /* Bottom-border-only input — the signature element of this redesign */
+  /* Input solo con borde inferior — elemento característico del rediseño */
   .input-line {
     width: 100%;
     background: transparent;
@@ -40,7 +40,7 @@
     border-bottom-color: #111111;
   }
 
-  /* Primary button — black */
+  /* Botón primario — negro */
   .btn-primary {
     display: inline-flex;
     align-items: center;
@@ -62,7 +62,7 @@
   .btn-primary:active { background: #000000; }
   .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  /* Secondary button — outlined */
+  /* Botón secundario — contorno */
   .btn-secondary {
     display: inline-flex;
     align-items: center;

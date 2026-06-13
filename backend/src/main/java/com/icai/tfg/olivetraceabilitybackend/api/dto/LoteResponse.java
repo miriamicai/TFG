@@ -7,5 +7,8 @@ public record LoteResponse(
     String loteId,
     String agricultorId,
     String origen,
-    Instant fechaCreacion
+    Instant fechaCreacion,
+    String contenedorId,
+    String matriculaCamion,
+    String coordenadasContenedor
 ) {}

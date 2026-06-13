@@ -101,7 +101,7 @@ export default function LandingPage() {
             <div className="mt-14 grid grid-cols-3 gap-8 text-center">
               {[
                 { num: '100%', label: 'On-chain' },
-                { num: '3', label: 'Eventos' },
+                { num: '11', label: 'Eventos' },
                 { num: 'EIP-155', label: 'Firmado' },
               ].map(({ num, label }) => (
                 <div key={label}>
@@ -152,6 +152,19 @@ export default function LandingPage() {
                 className="w-full py-5 px-8 bg-transparent text-white border border-olive-600 font-bold text-xs uppercase tracking-[0.2em] hover:bg-olive-800 active:bg-olive-700 transition-colors duration-150"
               >
                 Rastrear Lote
+              </button>
+              <button
+                onClick={() => navigate('/almazara')}
+                className="w-full py-5 px-8 font-bold text-xs uppercase tracking-[0.2em] transition-colors duration-150 border border-amber-700/60 text-amber-200 hover:border-amber-600 hover:text-amber-100 active:text-white"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(101,68,15,0.35) 0%, rgba(60,80,20,0.35) 100%)',
+                }}
+              >
+                <span className="mr-2">🫙</span>
+                Proceso de Extracción
+                <span className="block text-[10px] font-normal tracking-[0.15em] text-amber-400/70 mt-0.5 normal-case">
+                  Fase Almazara
+                </span>
               </button>
             </div>
 

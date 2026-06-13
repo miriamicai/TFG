@@ -32,7 +32,7 @@ async function main() {
   console.log("\nA continuación — actualizar backend/src/main/resources/application.properties:");
   console.log("  blockchain.enabled=true");
   console.log("  blockchain.contract.address=" + address);
-  console.log("  blockchain.wallet.privateKey=" + (process.env.GANACHE_PRIVATE_KEY ?? "<paste key here>"));
+  console.log("  blockchain.wallet.privateKey=" + (process.env.GANACHE_PRIVATE_KEY ?? "<pega la clave aquí>"));
 }
 
 main().catch((err) => {
