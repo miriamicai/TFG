@@ -1,6 +1,6 @@
 # TFG — Trazabilidad de Aceite de Oliva
 
-Sistema de trazabilidad blockchain para la cadena de suministro de aceite de oliva. Cubre la fase de campo y transporte (creación del lote, cierre del camión, pesaje IoT) y la fase de almazara (apertura de compuerta, pesaje en cinta, lavado, molienda, batido, decantación y extracción final). Todos los eventos quedan registrados de forma inmutable en un smart contract Ethereum.
+Sistema de trazabilidad blockchain para la cadena de suministro de aceite de oliva. Cubre la fase de campo, transporte y la fase de almazara. Todos los eventos quedan registrados de forma inmutable en un smart contract Ethereum.
 
 ## Estructura del repositorio
 
@@ -54,8 +54,6 @@ npx hardhat run scripts/deploy.js --network ganache
 
 Copia la dirección resultante a `blockchain.contract.address` en `backend/src/main/resources/application.properties`.
 
-Dirección actual desplegada: `0xd5C3A465B258979726DeF70e43C02dbCDB106da4`
-
 ## Flujo de pesaje IoT
 
 ```
@@ -70,27 +68,6 @@ Frontend → POST /api/lotes/{id}/pesaje/solicitar
 
 Base URL: `http://localhost:8080/api`
 
-### Fase campo / transporte
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| POST | `/lotes` | Crear lote (agricultorId, origen, cooperativaId?) |
-| POST | `/lotes/{id}/cerrar` | Cerrar camión (cooperativaId?) |
-| POST | `/lotes/{id}/pesaje` | Registrar peso manual |
-| POST | `/lotes/{id}/pesaje/solicitar` | Pesaje automático vía sensor IoT (MQTT) |
-| GET | `/lotes/{id}/trazabilidad` | Historial completo de eventos |
-
-### Fase almazara
-
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| POST | `/lotes/{id}/apertura-compuerta` | Apertura de tolva de recepción |
-| POST | `/lotes/{id}/pesaje-cinta` | Pesaje en cinta transportadora |
-| POST | `/lotes/{id}/lavado` | Paso por lavadora |
-| POST | `/lotes/{id}/pesaje-post-limpieza` | Pesaje tras lavado |
-| POST | `/lotes/{id}/molienda` | Inicio de molturación |
-| POST | `/lotes/{id}/temperatura-batido` | Temperatura de termobatidora |
-| POST | `/lotes/{id}/decanter` | Parámetros del decanter centrífugo |
-| POST | `/lotes/{id}/extraccion-finalizada` | Cierre del proceso de extracción |
 
 
