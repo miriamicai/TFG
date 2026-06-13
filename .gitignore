@@ -6,7 +6,6 @@
 # ── Sistema operativo ────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
-backend/HELP.md
 
 # ── Variables de entorno (claves y secretos) ─────────────────────────────────
 .env
