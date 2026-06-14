@@ -10,7 +10,7 @@
 # git clone https://github.com/miriamicai/TFG.git tfg-despliegue
 # cd tfg-despliegue
 # Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-# .\arranque.ps1
+# .\despliegue.ps1
 
 
 # Componentes:
