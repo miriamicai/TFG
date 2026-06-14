@@ -6,6 +6,21 @@
 # 3. Usar Chain ID 1337
 # 4. Copiar la private key de una cuenta de Ganache
 
+# Ejecutar en terminal:
+# git clone https://github.com/miriamicai/TFG.git tfg-despliegue
+# cd tfg-despliegue
+# Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+# .\arranque.ps1
+
+
+# Componentes:
+# Logs de Mosquitto: docker compose logs -f
+# Backend: http://localhost:8080
+# Frontend: http://localhost:5173
+# H2: http://localhost:8080/h2-console
+
+
+
 $ErrorActionPreference = "Stop"
 
 function Write-Step($message) {
@@ -255,3 +270,4 @@ Write-Host "Contrato desplegado y configurado: $contractAddress" -ForegroundColo
 Write-Host ""
 Write-Host "Si algo falla, puedes restaurar el backup:" -ForegroundColor Yellow
 Write-Host $backupPath
+
